@@ -28,7 +28,7 @@ class MainActivity : ComponentActivity() {
                         )
                         Text(
                             modifier = Modifier.padding(innerPadding),
-                            text = "Compose Sample App",
+                            text = "Compose Sample App.",
                         )
                     }
                 }
