@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">ComposeSampleApp</string>
+
+    <string name="sample_using_list">List Example</string>
+    <string name="sample_using_list_input_hint">Input Animal Name</string>
+    <string name="sample_using_list_empty_result">Not Found</string>
 </resources>

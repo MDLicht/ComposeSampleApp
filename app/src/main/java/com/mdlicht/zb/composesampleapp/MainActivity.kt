@@ -4,14 +4,25 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Column
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.mdlicht.zb.composesampleapp.ui.theme.ComposeSampleAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,17 +30,21 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val navController = rememberNavController()
+
             ComposeSampleAppTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Column(modifier = Modifier.fillMaxSize()) {
-                        Greeting(
-                            name = "Android",
-                            modifier = Modifier.padding(innerPadding)
-                        )
-                        Text(
-                            modifier = Modifier.padding(innerPadding),
-                            text = "Compose Sample App.",
-                        )
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    topBar = {
+                        MainTopBar(navController)
+                    },
+                ) { innerPadding ->
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding),
+                    ) {
+                        SampleAppNavigation(navController)
                     }
                 }
             }
@@ -37,18 +52,28 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
+fun MainTopBar(navController: NavHostController) {
+    val currentRoute =
+        navController.currentBackStackEntryFlow.collectAsState(initial = navController.currentBackStackEntry)
+    val isNavUpVisible = currentRoute.value?.destination?.route != "main"
+    TopAppBar(
+        title = {
+            Text(
+                modifier = Modifier,
+                text = stringResource(id = R.string.app_name),
+            )
+        },
+        navigationIcon = {
+            AnimatedVisibility(visible = isNavUpVisible) {
+                IconButton(onClick = { navController.navigateUp() }) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Navigate up"
+                    )
+                }
+            }
+        }
     )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    ComposeSampleAppTheme {
-        Greeting("Android")
-    }
 }
