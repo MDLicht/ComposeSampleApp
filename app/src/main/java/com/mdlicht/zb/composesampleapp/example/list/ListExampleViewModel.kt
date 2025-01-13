@@ -10,9 +10,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class ListExampleViewModel : ViewModel() {
-    private val _repository: ListExampleRepository = ListExampleRepositoryImpl()
-
     private var _job: Job? = null
+
+    private val searchAnimalUseCase = SearchAnimalUseCase()
 
     private val _uiState = MutableStateFlow<ListUiState>(ListUiState.Idle)
     val uiState: StateFlow<ListUiState> = _uiState.asStateFlow()
@@ -25,7 +25,7 @@ class ListExampleViewModel : ViewModel() {
             } else {
                 _uiState.value = ListUiState.Loading
                 delay(timeMillis = 500)
-                val animalList = _repository.searchAnimal(animalName = animalName)
+                val animalList = searchAnimalUseCase(animalName = animalName)
                 if (animalList.isEmpty()) {
                     _uiState.value = ListUiState.Empty
                 } else {
