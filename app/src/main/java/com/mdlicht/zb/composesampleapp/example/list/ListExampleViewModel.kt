@@ -24,12 +24,14 @@ class ListExampleViewModel : ViewModel() {
                 _uiState.value = ListUiState.Idle
             } else {
                 _uiState.value = ListUiState.Loading
+
                 delay(timeMillis = 500)
+                
                 val animalList = searchAnimalUseCase(animalName = animalName)
-                if (animalList.isEmpty()) {
-                    _uiState.value = ListUiState.Empty
+                _uiState.value = if (animalList.isEmpty()) {
+                    ListUiState.Empty
                 } else {
-                    _uiState.value = ListUiState.Result(keyword = animalName, list = animalList)
+                    ListUiState.Result(keyword = animalName, list = animalList)
                 }
             }
         }
