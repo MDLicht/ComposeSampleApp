@@ -42,42 +42,11 @@ fun ListExampleScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val currentUiState = uiState
-    var input by remember { mutableStateOf("") }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column {
-            TextField(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                value = input,
-                onValueChange = { value ->
-                    input = value
-                    viewModel.searchAnimal(animalName = value)
-                },
-                placeholder = {
-                    Text(text = stringResource(id = R.string.sample_using_list_input_hint))
-                },
-                trailingIcon = {
-                    AnimatedVisibility(
-                        visible = input.isNotEmpty(),
-                        enter = fadeIn(),
-                        exit = fadeOut(),
-                    ) {
-                        IconButton(onClick = {
-                            input = ""
-                            viewModel.clearInput()
-                        }) {
-                            Icon(
-                                painter = painterResource(id = android.R.drawable.ic_delete),
-                                contentDescription = "Clear input"
-                            )
-                        }
-                    }
-                },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                singleLine = true,
-                maxLines = 1,
-            )
+            ListExampleTextField(viewModel)
+
             when (currentUiState) {
                 is ListUiState.Idle -> {
                     ListExampleIdle()
@@ -97,6 +66,46 @@ fun ListExampleScreen(
             }
         }
     }
+}
+
+@Composable
+fun ListExampleTextField(
+    viewModel: ListExampleViewModel
+) {
+    var input by remember { mutableStateOf("") }
+
+    TextField(
+        modifier = Modifier
+            .fillMaxWidth(),
+        value = input,
+        onValueChange = { value ->
+            input = value
+            viewModel.searchAnimal(animalName = value)
+        },
+        placeholder = {
+            Text(text = stringResource(id = R.string.sample_using_list_input_hint))
+        },
+        trailingIcon = {
+            AnimatedVisibility(
+                visible = input.isNotEmpty(),
+                enter = fadeIn(),
+                exit = fadeOut(),
+            ) {
+                IconButton(onClick = {
+                    input = ""
+                    viewModel.clearInput()
+                }) {
+                    Icon(
+                        painter = painterResource(id = android.R.drawable.ic_delete),
+                        contentDescription = "Clear input"
+                    )
+                }
+            }
+        },
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+        singleLine = true,
+        maxLines = 1,
+    )
 }
 
 @Composable
