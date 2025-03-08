@@ -126,12 +126,12 @@ fun ListExampleLoading() {
 fun ListExampleLoadingShimmer() {
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 25.dp, vertical = 15.dp),
+            .fillMaxWidth(),
     ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(horizontal = 25.dp, vertical = 15.dp)
                 .height(14.dp)
                 .background(color = Color.LightGray),
         )
